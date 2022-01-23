@@ -32,7 +32,7 @@ def runPipelineSteps() {
         dockerImage = docker.build "${APP_NAME}:${appVersion}"
 
         docker.withRegistry("https://${NEXUS_DOCKER_REGISTRY_URL}", NEXUS_CREDENTIAL){
-            dockerImage.push()
+            dockerImage.push("latest")
         }
 
     }
