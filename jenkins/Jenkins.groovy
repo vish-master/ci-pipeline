@@ -14,46 +14,54 @@ pipeline {
     stages {
 
         stage("Checkout SCM") {
-            checkout(scm)
+            steps {
+                checkout(scm)
+            }
         }
 
 
         stage("build NodeJs") {
-            echo infoString("Building NodeJS App")
-            buildNodesJsApp()
+            steps {
+                echo infoString("Building NodeJS App")
+                buildNodesJsApp()
+            }
         }
 
         stage("unit testing") {
-            echo infoString("Testing NodeJS App")
-            try {
-                sh '''#!/bin/bash
+            steps {
+                echo infoString("Testing NodeJS App")
+                try {
+                    sh '''#!/bin/bash
                     set -x
                     npm start &
                     sleep 1
                     echo $! > .pidfile
                     set +x 
-            '''
-                sh "npm test"
-            } catch (Exception e) {
-                throw e.getMessage()
-            } finally {
-                sh '''#!/bin/bash
+                    '''
+                    sh "npm test"
+                } catch (Exception e) {
+                    throw e.getMessage()
+                } finally {
+                    sh '''#!/bin/bash
                     set -x
                     kill $(cat .pidfile)
                     set +x
-            '''
+                    '''
+                }
             }
         }
 
         stage("build Docker image") {
-            appVersion = getAppVersion()
-            echo infoString("Building Docker Image")
-            dockerImage = docker.build "${APP_NAME}:${appVersion}"
+            steps {
+                appVersion = getAppVersion()
+                echo infoString("Building Docker Image")
+                dockerImage = docker.build "${APP_NAME}:${appVersion}"
 
-            docker.withRegistry("https://${NEXUS_DOCKER_REGISTRY_URL}", NEXUS_CREDENTIAL) {
-                dockerImage.push("latest")
+                docker.withRegistry("https://${NEXUS_DOCKER_REGISTRY_URL}", NEXUS_CREDENTIAL) {
+                    dockerImage.push("latest")
+                }
+
             }
-
         }
 
     }
