@@ -1,8 +1,10 @@
 pipeline {
 
-    def NEXUS_CREDENTIAL = "nexus"
-    def NEXUS_DOCKER_REGISTRY_URL = "localhost:7777"
-    def APP_NAME= "api-with-node"
+    environment {
+        NEXUS_CREDENTIAL = "nexus"
+        NEXUS_DOCKER_REGISTRY_URL = "localhost:7777"
+        APP_NAME = "api-with-node"
+    }
 
     agent any
 
