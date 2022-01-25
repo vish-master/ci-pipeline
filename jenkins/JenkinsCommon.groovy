@@ -3,8 +3,6 @@ String appVersion
 
 def runPipelineSteps() {
 
-    appVersion = getAppVersion()
-
     stage("Checkout SCM") {
         checkout([$class: 'GitSCM', branches: [[name: '*/dev'], [name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/vish-master/api-testing-with-node.git']]])
     }
@@ -28,6 +26,7 @@ def runPipelineSteps() {
     }
 
     stage("build Docker image") {
+        appVersion = getAppVersion()
         echo infoString("Building Docker Image")
         dockerImage = docker.build "${APP_NAME}:${appVersion}"
 
