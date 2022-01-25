@@ -1,6 +1,6 @@
-def NEXUS_CREDENTIAL="nexus"
-def NEXUS_DOCKER_REGISTRY_URL="localhost:7777"
-def APP_NAME="api-with-node"
+def NEXUS_CREDENTIAL = "nexus"
+def NEXUS_DOCKER_REGISTRY_URL = "localhost:7777"
+def APP_NAME = "api-with-node"
 
 pipeline {
     agent any
@@ -13,56 +13,16 @@ pipeline {
 
     stages {
 
-        stage("Checkout SCM") {
+        stage("run pipeline steps") {
             steps {
-                checkout(scm)
-            }
-        }
-
-
-        stage("build NodeJs") {
-            steps {
-                echo infoString("Building NodeJS App")
-                buildNodesJsApp()
-            }
-        }
-
-        stage("unit testing") {
-            steps {
-                echo infoString("Testing NodeJS App")
-                try {
-                    sh '''#!/bin/bash
-                    set -x
-                    npm start &
-                    sleep 1
-                    echo $! > .pidfile
-                    set +x 
-                    '''
-                    sh "npm test"
-                } catch (Exception e) {
-                    throw e.getMessage()
-                } finally {
-                    sh '''#!/bin/bash
-                    set -x
-                    kill $(cat .pidfile)
-                    set +x
-                    '''
+                script {
+                    commonPipeline.infoString("Running Pipeline Steps")
+                    runPipelineSteps()
                 }
             }
+
         }
 
-        stage("build Docker image") {
-            steps {
-                appVersion = getAppVersion()
-                echo infoString("Building Docker Image")
-                dockerImage = docker.build "${APP_NAME}:${appVersion}"
-
-                docker.withRegistry("https://${NEXUS_DOCKER_REGISTRY_URL}", NEXUS_CREDENTIAL) {
-                    dockerImage.push("latest")
-                }
-
-            }
-        }
 
     }
 
@@ -79,6 +39,53 @@ pipeline {
 
         failure {
             echo commonPipeline.failureString("Failure")
+        }
+    }
+}
+
+
+def runPipelineSteps() {
+    stage("Checkout SCM") {
+            checkout(scm)
+    }
+
+
+    stage("build NodeJs") {
+            echo infoString("Building NodeJS App")
+            buildNodesJsApp()
+    }
+
+    stage("unit testing") {
+
+        echo infoString("Testing NodeJS App")
+        try {
+            sh '''#!/bin/bash
+                    set -x
+                    npm start &
+                    sleep 1
+                    echo $! > .pidfile
+                    set +x 
+                    '''
+            sh "npm test"
+        } catch (Exception e) {
+            throw e.getMessage()
+        } finally {
+            sh '''#!/bin/bash
+                    set -x
+                    kill $(cat .pidfile)
+                    set +x
+                    '''
+        }
+
+    }
+
+    stage("build Docker image") {
+        appVersion = getAppVersion()
+        echo infoString("Building Docker Image")
+        dockerImage = docker.build "${APP_NAME}:${appVersion}"
+
+        docker.withRegistry("https://${NEXUS_DOCKER_REGISTRY_URL}", NEXUS_CREDENTIAL) {
+            dockerImage.push("latest")
         }
     }
 }
@@ -107,5 +114,3 @@ String successString(String message) {
 String failureString(String message) {
     return "\033[41m ${message} \033[0m"
 }
-
-
