@@ -15,12 +15,10 @@ pipeline {
                 script {
                     sh 'pwd'
                     echo "Loading Jenkins files"
-                    dir("${env.WORKSPACE}/var/jenkins_home/workspace/ci-pipeline_dev@script"){
-                        sh "pwd"
-                        load "./jenkins/JenkinsConstants.groovy"
-                        commonPipeline = load "./jenkins/JenkinsCommon.groovy"
-                    }
-
+                    sh 'cd /'
+                    sh "pwd"
+                    load "./jenkins/JenkinsConstants.groovy"
+                    commonPipeline = load "./jenkins/JenkinsCommon.groovy"
                 }
             }
         }
