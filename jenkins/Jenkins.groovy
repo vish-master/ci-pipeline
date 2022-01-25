@@ -57,21 +57,21 @@ pipeline {
         }
 
     }
-}
 
 
-post {
-    always {
-        echo commonPipeline.infoString("Done")
-        cleanWs()
-    }
+    post {
+        always {
+            echo commonPipeline.infoString("Done")
+            cleanWs()
+        }
 
-    success {
-        echo commonPipeline.successString("Success")
-    }
+        success {
+            echo commonPipeline.successString("Success")
+        }
 
-    failure {
-        echo commonPipeline.failureString("Failure")
+        failure {
+            echo commonPipeline.failureString("Failure")
+        }
     }
 }
 
