@@ -1,3 +1,0 @@
-NEXUS_CREDENTIAL="nexus"
-NEXUS_DOCKER_REGISTRY_URL="localhost:7777"
-APP_NAME="api-with-node"
