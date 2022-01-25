@@ -4,7 +4,7 @@ String appVersion
 def runPipelineSteps() {
 
     stage("Checkout SCM") {
-        checkout([$class: 'GitSCM', branches: [[name: '*/dev'], [name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/vish-master/api-testing-with-node.git']]])
+        checkout([$class: 'GitSCM', branches: [[name: '*/dev'], [name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/vish-master/pipelines.git']]])
     }
 
 
