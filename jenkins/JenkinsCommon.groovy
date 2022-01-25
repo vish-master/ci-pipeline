@@ -4,7 +4,7 @@ String appVersion
 def runPipelineSteps() {
 
     stage("Checkout SCM") {
-        checkout([$class: 'GitSCM', branches: [[name: '*/dev'], [name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/vish-master/pipelines.git']]])
+        checkout([$class: 'GitSCM', branches: [[name: 'ci-pipeline']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '/home/jenkins/workspace/ci-pipeline_dev/']], userRemoteConfigs: [[url: 'https://github.com/vish-master/pipelines.git']]])
     }
 
 
