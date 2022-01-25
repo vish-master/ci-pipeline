@@ -16,7 +16,7 @@ pipeline {
         stage("run pipeline steps") {
             steps {
                 script {
-                    commonPipeline.infoString("Running Pipeline Steps")
+                    infoString("Running Pipeline Steps")
                     runPipelineSteps()
                 }
             }
