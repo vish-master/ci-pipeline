@@ -29,16 +29,16 @@ pipeline {
 
     post {
         always {
-            echo commonPipeline.infoString("Done")
+            echo infoString("Done")
             cleanWs()
         }
 
         success {
-            echo commonPipeline.successString("Success")
+            echo successString("Success")
         }
 
         failure {
-            echo commonPipeline.failureString("Failure")
+            echo failureString("Failure")
         }
     }
 }
