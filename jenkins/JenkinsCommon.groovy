@@ -6,7 +6,7 @@ def runPipelineSteps() {
     appVersion = getAppVersion()
 
     stage("Checkout SCM") {
-        checkout(scm)
+        checkout([$class: 'GitSCM', branches: [[name: '*/dev'], [name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/vish-master/api-testing-with-node.git']]])
     }
 
 
